@@ -5,10 +5,16 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 int drawTexturePicture();
 int drawTexturePictures();
+int transform();
+
 // 设置
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
@@ -28,12 +34,20 @@ unsigned int indices[] = {
 };
 
 int main() {
+	//test
+	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 trans;
+	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));  //从这里就能看出单位矩阵的作用了。初始化的trans是一个单位矩阵，让它平移到(1.0f, 1.0f, 0.0f)的位置产生了一个平移矩阵。
+	vec = trans * vec;
+	std::cout << "(" << vec.x << "," << vec.y << "," << vec.z << ")" << std::endl;
+
 	//drawTexturePicture();
-	drawTexturePictures();
+	//drawTexturePictures();
+	transform();
 	return 0;
 }
 
-int drawTexturePicture() 
+int drawTexturePicture()
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -133,7 +147,7 @@ int drawTexturePicture()
 	return 0;
 }
 
-int drawTexturePictures() 
+int drawTexturePictures()
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -192,7 +206,7 @@ int drawTexturePictures()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  //纵坐标的过滤方式
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//缩小时的过滤方式
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//放大时的过滤方式
-   
+
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);//OpenGL原点（0,0）位于左下角，而通常一张图片的原点位于左上角。
 	//unsigned char* data = stbi_load("imgs/beauty.jpg", &width, &height, &nrChannels, 0);
@@ -263,6 +277,123 @@ int drawTexturePictures()
 	glDeleteBuffers(1, &VBO);
 	glfwTerminate();
 	return 0;
+	return 0;
+}
+
+int transform()
+{
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+	if (window == NULL) {
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
+
+	//获取最大属性数量
+	int nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "最大支持的属性数量为：" << nrAttributes << std::endl;
+
+	//！创建我们的着色器
+	Shader shader("shaders/Shader.vs", "shaders/Shader.fs");
+
+	//第一个环境
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));//颜色属性
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));//纹理属性
+	glEnableVertexAttribArray(2);
+
+	unsigned int EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	//纹理
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//设置纹理包装和过滤的方式，仅支持点过滤和二次线性过滤？？
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  //横坐标的过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  //纵坐标的过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//缩小时的过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//放大时的过滤方式
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true);//OpenGL原点（0,0）位于左下角，而通常一张图片的原点位于左上角。
+	//unsigned char* data = stbi_load("imgs/beauty.jpg", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("imgs/beauty.jpg", &width, &height, &nrChannels, 0);
+	GLint format = nrChannels == 3 ? GL_RGB : GL_RGBA;
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "无法加载问题，请检查代码或资源是否有误。" << std::endl;
+	stbi_image_free(data);
+
+	//生成矩阵
+	glm::mat4 trans = glm::mat4(1.0f);//一定要初始化
+	trans = glm::scale(trans, glm::vec3(1.0f));
+	trans = glm::rotate(trans, /*glm::radians(90.0f)*/90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	float* v = glm::value_ptr<float>(trans);
+	for (int i = 0; i < sizeof(v); i++)
+	{
+		std::cout << *(v + i) << std::endl;
+	}
+
+	shader.use();
+	shader.setMat4("transform", glm::value_ptr(trans));
+
+	while (!glfwWindowShouldClose(window)) {
+		processInput(window);
+
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		shader.use();
+		//glm::mat4 trans;
+		trans = glm::mat4(1.0f);
+		trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+		trans = glm::rotate(trans,/* glm::radians(90.0f)*/(float)glfwGetTime() * 5.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		shader.setMat4("transform", glm::value_ptr(trans));
+		/*
+		* 这里是一个习惯，上面的操作把属性都保存到了VAO中，这里只需要绑定就可以
+		* 如果要显示的东西不同，也只需要在这里绑定不同的东西就可以显示
+		*/
+		//glBindTexture(GL_TEXTURE_2D, texture);//好像可以不用
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glBindVertexArray(0);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glfwTerminate();
 	return 0;
 }
 
