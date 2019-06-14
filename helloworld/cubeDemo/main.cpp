@@ -201,7 +201,7 @@ int main() {
 
 	//观察变换矩阵
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));//(0.0f, 0.0f, -4.0f)为观察空间的原点
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));//(0.0f, 0.0f, -4.0f)为观察空间的原点,观察空间其实是以摄像机为原点，以摄像机观察的方向为-z轴方向的坐标系统
 
 	//投影变换矩阵
 	glm::mat4 projection = glm::mat4(1.0f);
