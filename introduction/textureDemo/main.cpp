@@ -109,7 +109,7 @@ int drawTexturePicture()
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);//OpenGL原点（0,0）位于左下角，而通常一张图片的原点位于左上角。
 	//unsigned char* data = stbi_load("imgs/beauty.jpg", &width, &height, &nrChannels, 0);
-	unsigned char* data = stbi_load("imgs/035.bmp", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("imgs/beauty.jpg", &width, &height, &nrChannels, 0);
 	GLint format = nrChannels == 3 ? GL_RGB : GL_RGBA;
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -132,7 +132,7 @@ int drawTexturePicture()
 		* 这里是一个习惯，上面的操作把属性都保存到了VAO中，这里只需要绑定就可以
 		* 如果要显示的东西不同，也只需要在这里绑定不同的东西就可以显示
 		*/
-		//glBindTexture(GL_TEXTURE_2D, texture);//好像可以不用
+		glBindTexture(GL_TEXTURE_2D, texture);//好像可以不用
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

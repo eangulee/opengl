@@ -212,6 +212,11 @@ int drawTriangle()
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
+	/*创建VBO需要3个步骤：
+		1.使用glGenBuffers()生成新缓存对象。
+		2.使用glBindBuffer()绑定缓存对象。
+		3.使用glBufferData()将顶点数据拷贝到缓存对象中。
+	*/
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -233,7 +238,7 @@ int drawTriangle()
 		* 这里是一个习惯，上面的操作把属性都保存到了VAO中，这里只需要绑定就可以
 		* 如果要显示的东西不同，也只需要在这里绑定不同的东西就可以显示
 		*/
-		glBindVertexArray(VAO);
+		//glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
