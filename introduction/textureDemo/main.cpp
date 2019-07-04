@@ -42,8 +42,8 @@ int main() {
 	std::cout << "(" << vec.x << "," << vec.y << "," << vec.z << ")" << std::endl;
 
 	//drawTexturePicture();
-	//drawTexturePictures();
-	transform();
+	drawTexturePictures();
+	//transform();
 	return 0;
 }
 
@@ -253,10 +253,10 @@ int drawTexturePictures()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//好像不绑定也可以
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, texture);
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, texture2);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		shader.use();
 		shader.setFloat("factor", factor);
