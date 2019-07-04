@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AdvancedOpenGL", "AdvancedO
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cubeMaps", "cubeMaps\cubeMaps.vcxproj", "{3F7BB60A-2AE4-4B6E-9879-E442F19645ED}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniformBuff", "UniformBuff\UniformBuff.vcxproj", "{952EC07B-31FF-4019-A84B-4473E7F8C5D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{3F7BB60A-2AE4-4B6E-9879-E442F19645ED}.Release|x64.Build.0 = Release|x64
 		{3F7BB60A-2AE4-4B6E-9879-E442F19645ED}.Release|x86.ActiveCfg = Release|Win32
 		{3F7BB60A-2AE4-4B6E-9879-E442F19645ED}.Release|x86.Build.0 = Release|Win32
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Debug|x64.ActiveCfg = Debug|x64
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Debug|x64.Build.0 = Debug|x64
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Debug|x86.ActiveCfg = Debug|Win32
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Debug|x86.Build.0 = Debug|Win32
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Release|x64.ActiveCfg = Release|x64
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Release|x64.Build.0 = Release|x64
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Release|x86.ActiveCfg = Release|Win32
+		{952EC07B-31FF-4019-A84B-4473E7F8C5D7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
